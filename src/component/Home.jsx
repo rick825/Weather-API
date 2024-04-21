@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import '../css/Home.css';
 import { get, del, refresh } from '../store/actions';
@@ -8,6 +8,25 @@ const Home = () => {
   const [cityName, setCity] = useState('');
   const dispatch = useDispatch();
   const cities = useSelector((state) => state.city.cities);
+
+  const date = new Date();
+ 
+  const formattedDate = date.toLocaleDateString('en-US', {
+    day: 'numeric',
+    month: 'short',
+  });
+  
+  // Format the time component
+  const formattedTime = date.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
+  
+  // Combine the formatted date and time
+  const formattedDateTime = `${formattedDate}, ${formattedTime}`;
+  
+  console.log(formattedDateTime);
 
   //Handle Add City
   const handleAddCity = async (city) => {
@@ -78,7 +97,7 @@ const Home = () => {
               <div className="weatherText" key={cityItem.id}>
                 <div className="weatherTextTop">
                   <div className="weatherTextLeft">
-                    <p>Date, Time</p>
+                    <p>{formattedDateTime}</p>
                     <h2>{cityItem.name}</h2>
                   </div>
                   <div className="weatherTextRight">
