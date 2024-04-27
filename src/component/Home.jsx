@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import '../css/Home.css';
 import { get, del, refresh } from '../store/actions';
 import { v4 as uuidv4 } from 'uuid';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Home = () => {
   const [cityName, setCity] = useState('');
@@ -33,6 +35,7 @@ const Home = () => {
     console.log('Running 1');
     const weatherData = await fetchWeatherData(city);
     console.log('Running 2');
+    toast.success(`Weather is Fetched for ${city}`);
     console.log(weatherData);
     if (!weatherData) return;
     const uuid = uuidv4();
@@ -51,6 +54,7 @@ const Home = () => {
   //Handle Delete
   const handleDelete = (city) => {
     dispatch(del(city.id));
+    toast.success(`${city.name} is Deleted`);
   };
 
   //Handle Refresh
@@ -65,7 +69,8 @@ const Home = () => {
     };
     console.log(refreshedCity);
     dispatch(refresh(refreshedCity));
-    alert(`Weather for ${city.name} Refreshed`);
+    // alert(`Weather for ${city.name} Refreshed`);
+    toast.success(`Weather for ${city.name} Refreshed`);
   };
 
   //Weather fetch
