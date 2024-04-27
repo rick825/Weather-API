@@ -2,7 +2,8 @@
   width: 100%;
   height: 35rem;
   display: flex;
-  border: 2px solid white;
+  border: 1px solid rgba(255, 255, 255, 0.129);
+  border-radius: 10px;
 }
 
 .weather {
@@ -20,21 +21,47 @@
 }
 
 .weather .weatherMain {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  /* gap: 2rem; */
 }
 
 .weather .weatherMain .weatherCity {
-  width: 100%;
+  width: 85%;
+  max-height: 20rem;
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 1.5rem;
+  /* border: 1px solid white; */
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Hide the scrollbar track */
+.weather .weatherMain .weatherCity::-webkit-scrollbar {
+  width: 5px;
+  border-radius: 10px;
+}
+
+/* Handle */
+.weather .weatherMain .weatherCity::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 50px;
+}
+
+/* Handle on hover */
+.weather .weatherMain .weatherCity::-webkit-scrollbar-thumb:hover {
+  background: #555;
+  cursor: pointer;
 }
 
 .weather .weatherMain .weatherText {
   min-width: 15rem;
+  height: 10rem;
   display: flex;
   flex-direction: column;
   border: 2px solid white;
@@ -81,10 +108,37 @@
   padding: 0.5rem;
 }
 
+.weather .weatherMain .inputDiv {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
 .weather .weatherMain input {
   padding: 0.5rem 2rem;
   margin-top: 2rem;
   border-radius: 5px;
   border: none;
   padding-left: 10px;
+}
+
+.weather .weatherMain .inputDiv button {
+  padding: 0.6rem 1rem;
+  margin-top: 1.87rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.weather .weatherMain .inputDiv button:hover {
+  transform: scale(1.07);
+}
+
+@media only screen and (max-width: 600px) {
+  .weather .weatherHead {
+    font-size: 1.6rem;
+    text-align: center;
+    margin-top: -1.5rem;
+  }
 }

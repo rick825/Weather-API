@@ -1,4 +1,3 @@
-import React from 'react';
 import Container from './component/Container';
 import './css/App.css';
 import { Provider } from 'react-redux';

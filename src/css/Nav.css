@@ -3,13 +3,38 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0rem 2rem;
+  padding: 0rem 1rem;
   /* border: 2px solid white; */
+}
+
+.nav .navlogo h2 {
+  /* margin-top: -1rem; */
+  font-size: 2rem;
+  font-weight: 200;
 }
 
 .nav .navlist {
   display: flex;
+  align-items: center;
   gap: 1rem;
   list-style: none;
-  margin-right: 4rem;
+  margin-right: 5rem;
+}
+
+.nav .navlist img {
+  width: 26px;
+}
+
+@media only screen and (max-width: 600px) {
+  .nav {
+    padding: 0;
+  }
+
+  .nav .navlogo h2 {
+    margin-top: 0.5rem;
+  }
+
+  .nav .navlist {
+    margin-right: 0;
+  }
 }

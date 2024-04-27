@@ -1,4 +1,4 @@
-import  { useState} from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import '../css/Home.css';
 import { get, del, refresh } from '../store/actions';
@@ -8,46 +8,51 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Home = () => {
   const [cityName, setCity] = useState('');
+  const [formattedDateTime, setFormattedDateTime] = useState('');
   const dispatch = useDispatch();
   const cities = useSelector((state) => state.city.cities);
 
-  const date = new Date();
- 
-  const formattedDate = date.toLocaleDateString('en-US', {
-    day: 'numeric',
-    month: 'short',
-  });
-  
-  // Format the time component
-  const formattedTime = date.toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  });
-  
-  // Combine the formatted date and time
-  const formattedDateTime = `${formattedDate}, ${formattedTime}`;
-  
-  console.log(formattedDateTime);
+  useEffect(() => {
+    formatDateTime();
+  }, []);
+
+  function formatDateTime() {
+    const date = new Date();
+
+    const formattedDate = date.toLocaleDateString('en-US', {
+      day: 'numeric',
+      month: 'short',
+    });
+
+    const formattedTime = date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+
+    console.log(`${formattedDate}, ${formattedTime}`);
+    setFormattedDateTime(`${formattedDate}, ${formattedTime}`);
+  }
 
   //Handle Add City
-  const handleAddCity = async (city) => {
+  const handleAddCity = async () => {
     console.log('Running 1');
-    const weatherData = await fetchWeatherData(city);
+    formatDateTime();
+    const weatherData = await fetchWeatherData(cityName);
     console.log('Running 2');
-    toast.success(`Weather is Fetched for ${city}`);
     console.log(weatherData);
     if (!weatherData) return;
     const uuid = uuidv4();
     const newCity = {
       id: uuid,
-      name: city,
+      name: cityName,
       temperature: weatherData.main.temp,
       description: weatherData.weather[0].description,
     };
     console.log(newCity.id);
     console.log(newCity);
     dispatch(get(newCity));
+    toast.success(`Weather is Fetched for ${cityName}`);
     setCity('');
   };
 
@@ -60,6 +65,7 @@ const Home = () => {
   //Handle Refresh
   const handleRefresh = async (city) => {
     const weatherData = await fetchWeatherData(city.name);
+    formatDateTime();
     if (!weatherData) return;
     const refreshedCity = {
       id: city.id,
@@ -69,8 +75,7 @@ const Home = () => {
     };
     console.log(refreshedCity);
     dispatch(refresh(refreshedCity));
-    // alert(`Weather for ${city.name} Refreshed`);
-    toast.success(`Weather for ${city.name} Refreshed`);
+    toast.success(`Weather for ${refreshedCity.name} Refreshed`);
   };
 
   //Weather fetch
@@ -82,6 +87,11 @@ const Home = () => {
         `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric`
       );
       console.log('Server Completed');
+      if (!response.ok) {
+         toast.success(`City Not Found or typo in City Name ${cityName}`);
+        console.error('Failed to fetch weather data:', response.status);
+        return null;
+      }
       const data = await response.json();
       console.log('Response Collected:', data);
       return data;
@@ -113,7 +123,7 @@ const Home = () => {
                 </div>
                 <div className="weatherDegrees">
                   <span></span>
-                  <h3>{cityItem.temperature}°C</h3>
+                  <h3>{cityItem.temperature} °C</h3>
                 </div>
                 <div className="weatherButton">
                   <button onClick={() => handleRefresh(cityItem)}>
@@ -124,15 +134,20 @@ const Home = () => {
               </div>
             ))}
           </div>
-          <input
-            type="text"
-            value={cityName}
-            onChange={(e) => setCity(e.target.value)}
-            placeholder="Enter Your City"
-            onKeyDown={(e) =>
-              e.key === 'Enter' && handleAddCity(e.target.value)
-            }
-          />
+          <div className="inputDiv">
+            <input
+              type="text"
+              value={cityName}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder="Enter Your City"
+              onKeyDown={(e) =>
+                e.key === 'Enter' && handleAddCity(e.target.value)
+              }
+            />
+            <button className="inputButton" onClick={() => handleAddCity()}>
+              Check
+            </button>
+          </div>
         </div>
       </div>
     </>
